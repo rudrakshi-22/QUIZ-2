@@ -1,5 +1,3 @@
-
-
 // Selecting HTML elements
 //References
 let timeLeft = document.querySelector(".time-left");
@@ -234,15 +232,24 @@ window.onload = () => {
     startScreen.classList.remove("hide");
     displayContainer.classList.add("hide");
 };
-// ...
+exit.onclick = () => {
+    window.location.href = "index.html"
+}
+// When user clicks on the "Start" button
+startButton.addEventListener("click", () => {
+    // Hide the instruction box
+    instructBox.style.display = "none";
+    // Start the quiz
+    startScreen.classList.add("hide");
+    displayContainer.classList.remove("hide");
+    initial();
+});
+// Function to handle the automatic transition to the next question
+function displayNext() {
+    // Increment the question count
+    questionCount += 1;
 
-// Skip Button
-let skipBtn = document.getElementById("skip-button");
-skipBtn.addEventListener("click", () => {
-    // Increment questionCount
-    questionCount -= 1;
-
-    // If it's the last question
+    // Check if it's the last question
     if (questionCount == quizArray.length) {
         // Hide the question container and display the score
         displayContainer.classList.add("hide");
@@ -250,19 +257,58 @@ skipBtn.addEventListener("click", () => {
 
         // Display the user's score
         userScore.innerHTML =
-            "Your score is " + scoreCount + " out of " + questionCount;
+            "Your score is " + scoreCount + " out of " + quizArray.length;
     } else {
-        // Display questionCount
+        // Display the question count
         countOfQuestion.innerHTML =
-            questionCount + 1 + " of " + quizArray.length + " Question";
+            questionCount + 1 + " of " + quizArray.length + " questions";
 
         // Display the next quiz question
         quizDisplay(questionCount);
 
-        // Reset the countdown timer
+        // Reset the timer
         count = 11;
         clearInterval(countdown);
         timerDisplay();
     }
+}
+
+// Add event listeners to the answer buttons
+function addAnswerEventListeners() {
+    const answerButtons = document.querySelectorAll(".option-div");
+    answerButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            checker(button);
+            displayNext(); // Automatically move to the next question
+        });
+    });
+}
+
+// Initial setup
+function initial() {
+    quizContainer.innerHTML = "";
+    questionCount = 0;
+    scoreCount = 0;
+    count = 11;
+    clearInterval(countdown);
+    timerDisplay();
+    quizCreator();
+    quizDisplay(questionCount);
+    addAnswerEventListeners(); // Add event listeners to answer buttons
+}
+
+// ... (rest of your code)
+
+// Start the quiz when the "Start" button is clicked
+startButton.addEventListener("click", () => {
+    instructBox.style.display = "none"; // Hide the instruction box
+    startScreen.classList.add("hide");
+    displayContainer.classList.remove("hide");
+    initial();
 });
 
+// Hide the quiz and display the start screen
+window.onload = () => {
+    startScreen.classList.remove("hide");
+    displayContainer.classList.add("hide");
+}
